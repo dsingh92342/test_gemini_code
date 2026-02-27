@@ -41,6 +41,36 @@ export function useUdharData() {
     );
   };
 
+  const deleteTransaction = (customerId, transactionId) => {
+    setCustomers((prev) =>
+      prev.map((customer) => {
+        if (customer.id === customerId) {
+          return {
+            ...customer,
+            transactions: customer.transactions.filter((tx) => tx.id !== transactionId),
+          };
+        }
+        return customer;
+      })
+    );
+  };
+
+  const editTransaction = (customerId, transactionId, updatedTx) => {
+    setCustomers((prev) =>
+      prev.map((customer) => {
+        if (customer.id === customerId) {
+          return {
+            ...customer,
+            transactions: customer.transactions.map((tx) =>
+              tx.id === transactionId ? { ...tx, ...updatedTx, amount: parseFloat(updatedTx.amount) } : tx
+            ),
+          };
+        }
+        return customer;
+      })
+    );
+  };
+
   const totals = useMemo(() => {
     let totalUdhar = 0;
     let totalVasuli = 0;
@@ -63,6 +93,8 @@ export function useUdharData() {
     addCustomer,
     deleteCustomer,
     addTransaction,
+    deleteTransaction,
+    editTransaction,
     ...totals,
   };
 }
